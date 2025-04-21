@@ -1,0 +1,128 @@
+ {
+  "name": "bus-booking",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "sqlite3": "^5.1.6",
+    "body-parser": "^1.20.2"
+  }
+}
+const express = require('express');
+const bodyParser = require('body-parser');
+const db = require('./database');
+const path = require('path');
+
+const app = express();
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static('public'));
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'html');
+app.engine('html', require('ejs').renderFile);
+
+// Show booking form
+app.get('/', (req, res) => {
+    res.render('index');
+});
+
+// Handle booking
+app.post('/book', (req, res) => {
+    const { name, route, date, seats } = req.body;
+    db.run(
+        `INSERT INTO bookings(name, route, date, seats) VALUES (?, ?, ?, ?)`,
+        [name, route, date, seats],
+        function(err) {
+            if (err) {
+                return res.send('Error booking ticket.');
+            }
+            res.send(`<h2>Booking successful! Booking ID: ${this.lastID}</h2>`);
+        }
+    );
+});
+
+app.listen(3000, () => {
+    console.log('Server running on http://localhost:3000');
+});
+const express = require('express');
+const bodyParser = require('body-parser');
+const db = require('./database');
+const path = require('path');
+
+const app = express();
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static('public'));
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'html');
+app.engine('html', require('ejs').renderFile);
+
+// Show booking form
+app.get('/', (req, res) => {
+    res.render('index');
+});
+
+// Handle booking
+app.post('/book', (req, res) => {
+    const { name, route, date, seats } = req.body;
+    db.run(
+        `INSERT INTO bookings(name, route, date, seats) VALUES (?, ?, ?, ?)`,
+        [name, route, date, seats],
+        function(err) {
+            if (err) {
+                return res.send('Error booking ticket.');
+            }
+            res.send(`<h2>Booking successful! Booking ID: ${this.lastID}</h2>`);
+        }
+    );
+});
+
+app.listen(3000, () => {
+    console.log('Server running on http://localhost:3000');
+});
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bus Ticket Booking</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <h1>Bus Ticket Booking</h1>
+    <form method="POST" action="/book">
+        <label>Name:</label><br>
+        <input type="text" name="name" required><br>
+
+        <label>Route:</label><br>
+        <select name="route">
+            <option value="City A to City B">City A to City B</option>
+            <option value="City B to City C">City B to City C</option>
+        </select><br>
+
+        <label>Date:</label><br>
+        <input type="date" name="date" required><br>
+
+        <label>Seats:</label><br>
+        <input type="number" name="seats" min="1" required><br><br>
+
+        <button type="submit">Book Ticket</button>
+    </form>
+</body>
+</html>
+body {
+    font-family: Arial, sans-serif;
+    margin: 40px;
+    background-color: #f0f0f0;
+}
+form {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+}
+input, select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+npm install
+node server.js
